@@ -7,7 +7,7 @@ library(shinythemes)
 
 meteorite_data <- read_csv("raw_data/meteorite-landings.csv")
 
-
+# Creating meteor icon for leaflet plot
 meteor_icon <- makeIcon(
     iconUrl = "../meteor.svg",
     iconWidth = 38, iconHeight = 95,
@@ -16,44 +16,54 @@ meteor_icon <- makeIcon(
 
 
 # Define UI for application that draws a histogram
-ui <- fluidPage(
-    
-    theme = shinytheme("united"),
-
-    # Application title
-    titlePanel("Meteorite Landings 1399 - 2013"),
-
-    # Sidebar with a slider input for number of bins 
-    # sidebarLayout(
-    #     sidebarPanel(
-    fluidRow(column(6,
-            sliderInput("date",
-                        h4("Select a range of years"),
-                        min = 1399,
-                        max = 2013,
-                        value = c(1963, 2013),
-                        sep = ""),
-    ),
-    column(6,
-            checkboxGroupInput("fall", 
-                               label = h4("Meteors that fell or were found"), 
-                               choices = list("Fell", 
-                                              "Found"),
-                               selected = c("Fell", "Found"),
-                               inline = T))
-            
-        ),
-    
-    fluidRow(
-
-        # Show a plot of the generated distribution
-        mainPanel(
-            h6("Hover over meteor to view it's name"),
-           leafletOutput("meteor_plot",, width = "100%")
+ui <- fluidPage(tags$head(tags$style(
+    HTML('
+             #controls {opacity : 0.7;}
+             #date {opacity : 1;}
+             #fall {opacity : 1;}')
+)),
+    navbarPage(theme = shinytheme("united"), 
+               collapsible = TRUE,
+               "Meteorite Landings", 
+               id="nav",
+               
+               tabPanel("Meteorite map",
+                        div(class="outer",
+                          
+            leafletOutput("meteor_plot",
+                          width = "100%"
+                          # ,
+                          # height = "auto"
+                          ),
         
-        )
+            absolutePanel(id = "controls", 
+                          class = "panel panel-default",
+                         top = 80, 
+                         left = 20, 
+                         width = 250, 
+                         fixed=TRUE,
+                         draggable = TRUE, 
+                         height = "auto",
+                         
+                sliderInput("date",
+                            h4("Select a range of years"),
+                            min = 1399,
+                            max = 2013,
+                            value = c(1963, 2013),
+                            sep = ""),
+                         
+                checkboxGroupInput("fall", 
+                                label = h4("Meteors that fell or were found"), 
+                                choices = list("Fell", 
+                                               "Found"),
+                                selected = c("Fell", 
+                                             "Found"),
+                                inline = T)
+                )
+            )
+            )
+            )
     )
-)
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
