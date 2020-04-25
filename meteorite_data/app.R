@@ -24,30 +24,33 @@ ui <- fluidPage(
     titlePanel("Meteorite Landings 1399 - 2013"),
 
     # Sidebar with a slider input for number of bins 
-    sidebarLayout(
-        sidebarPanel(
+    # sidebarLayout(
+    #     sidebarPanel(
+    fluidRow(column(6,
             sliderInput("date",
-                        h3("Select a range of years"),
+                        h4("Select a range of years"),
                         min = 1399,
                         max = 2013,
                         value = c(1963, 2013),
                         sep = ""),
-            
+    ),
+    column(6,
             checkboxGroupInput("fall", 
-                               label = h3("Meteors that fell or were found"), 
+                               label = h4("Meteors that fell or were found"), 
                                choices = list("Fell", 
                                               "Found"),
-                               selected = c("Fell", "Found"))
+                               selected = c("Fell", "Found"),
+                               inline = T))
             
         ),
+    
+    fluidRow(
 
         # Show a plot of the generated distribution
         mainPanel(
             h6("Hover over meteor to view it's name"),
-           leafletOutput("meteor_plot"),
-           h6("Icons made by <a href='https://www.flaticon.com/authors/freepik' title='Freepik'>Freepik</a> from <a href='https://www.flaticon.com/' title='Flaticon'> www.flaticon.com</a>"
-            
-           )
+           leafletOutput("meteor_plot",, width = "100%")
+        
         )
     )
 )
